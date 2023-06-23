@@ -1,6 +1,11 @@
-const isString = (str) => typeof (str) === 'string'
+const checkType = {
+  isString: (str) => typeof (str) === 'string',
+  isNumber: (num) => typeof (num) === 'number',
+  isInteger: (num) => typeof (num) === 'number' ? Number(num) / 2 === 0 : false
+}
 const CRUDMetodForOneData = ({ modelsFunction }) => {
   const nameOfvalue = modelsFunction.nameOfTable
+  const { isString } = checkType
   return {
     getsForOneData: async (req, res) => {
       const value = req.query[nameOfvalue] || ''
@@ -34,13 +39,13 @@ const CRUDMetodForOneData = ({ modelsFunction }) => {
   }
 }
 
-const routersForOneData = ({ nameOfvalue='', modelsFunction }) => {
+const routersForOneData = ({ nameOfvalue = '', modelsFunction }) => {
   const router = require('express').Router();
   const { getsForOneData, postForOneData } = CRUDMetodForOneData({ nameOfvalue, modelsFunction })
 
   router.get('/', getsForOneData)
   router.post('/', postForOneData)
-  return router 
+  return router
 }
 
-module.exports = { routersForOneData,CRUDMetodForOneData, isString }
+module.exports = { routersForOneData, checkType }

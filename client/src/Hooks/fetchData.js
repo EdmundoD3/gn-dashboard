@@ -29,14 +29,40 @@ const getSuspender = (promise) => {
   return { read };
 };
 
-export function fetchData({ url, params = {} }) {
-  const promise = axios
-    .get(url, { params, data: params })
-    .then((response) => response.data)
-    .then((json) => json);
+export function fetchData(URL) {
+  return {
+    get: ({url='',params = {}}) => {
+      const promise = axios
+        .get(url=URL+url, { params, data: params })
+        .then((response) => response.data)
+        .then((json) => json);
+      return getSuspender(promise);
+    },
+    post: ({url='',params = {}}) => {
+      const promise = axios
+        .post(url=URL+url, { params, data: params })
+        .then((response) => response.data)
+        .then((json) => json);
+      return getSuspender(promise);
+    },
+    put: ({url='',params = {}}) => {
+      const promise = axios
+        .put(url=URL+url, { params, data: params })
+        .then((response) => response.data)
+        .then((json) => json);
+      return getSuspender(promise);
+    },
+    delete: ({url='',params = {}}) => {
+      const promise = axios
+        .delete(url=URL+url, { params, data: params })
+        .then((response) => response.data)
+        .then((json) => json);
+      return getSuspender(promise);
+    },
+  }
 
-  return getSuspender(promise);
 }
+
 
 // function getDataFromServer() {
 //   axios

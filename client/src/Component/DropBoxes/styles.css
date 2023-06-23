@@ -22,9 +22,7 @@
 .select-dropbox-input:focus + .select-container {
   display: flex;
 }
-/* .select-dropbox-input:hover + .select-container {
-  display: flex;
-} */
+
 .select-container:hover {
   display: flex;
 }

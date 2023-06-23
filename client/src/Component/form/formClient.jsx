@@ -1,38 +1,34 @@
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { fetchData } from "../../Hooks/fetchData";
-// import './styles.css'
 import DropBox from "../DropBoxes/DropBox";
-import CobradorDropbox from "../DropBoxes/CobradorDropBox";
+import DropBoxUrl from "../DropBoxes/DropBoxURL";
+import { handleSubmit, setHandleChange } from "../Handle/handle";
 
-const url = "/api/v1/client/data"
-const apiDataInit = fetchData({
-  url, params: {
+const url = "/api/v1/client"
+const clientFetchData =fetchData(url)
+const apiDataInit = clientFetchData.get({url:'/data',params: {
     'name': '',
-    'lastName': '',
+    'lastname': '',
     'phone': '',
     'email': '',
     'date': ''
-  }
-})
+  }})
 
-export default function FormClient() {
+const urlVersion = '/api/v1'
+const DropboxCobrador = DropBoxUrl({ url: `${urlVersion}/cobrador`, fetchParam: "cobrador", labelName: "Cobrador" })
+const Dropboxstatus = DropBoxUrl({ url: `${urlVersion}/status`, fetchParam: "status", labelName: "Status" })
+const DropboxVendedora = DropBoxUrl({ url: `${urlVersion}/vendedora`, fetchParam: "vendedora", labelName: "Vendedora" })
+
+export default function FormClient({ userData, setUserData }) {
   const [apiData, setApiData] = useState(apiDataInit);
-  const [userData, setUserData] = useState({
-    name: '',
-    lastName: '',
-    phone: '',
-    date: '',
-    email: '',
-    comments: ''
-  });
-
+  
   useEffect(() => {
     const { name, lastName, phone, email } = userData
     // verify that there is no other client with that data
-    setApiData(fetchData({
-      url, params: {
+    setApiData(clientFetchData.get({
+      url:'/data', params: {
         'name': name,
-        'lastName': lastName,
+        'lastname': lastName,
         'phone': phone,
         'email': email
       }
@@ -40,24 +36,11 @@ export default function FormClient() {
     return () => {
     };
   }, [userData]);
-  function handleSubmit(evt) {
-    evt.preventDefault();
-  }
 
-  function handleChange(evt) {
-    const { name, value } = evt.target;
-    const newValues = {
-      ...userData,
-      [name]: value,
-    };
-    setUserData(newValues);
-  }
-  // `cobrador_id` INTEGER NOT NULL,\
-  // `status_id` INTEGER NOT NULL,\
-  // `ischange` INTEGER NOT NULL DEFAULT 1,\
-  // `id_mdb` TEXT NULL,\
-  // `vendedora_id` INTEGER NOT NULL,\
-  const propsUserDropBox = { values: userData, setValues: setUserData, handleChange, apiData }
+  const handleChange = setHandleChange({ values:userData, setValues:setUserData })
+
+  const propsUserDropBox = { values: userData, setValues: setUserData, apiData, handleChange }
+  const propsUserDataUseState = {values: userData, setValues: setUserData}
   const props = {
     name: { name: "Nombre", propertyName: "name" },
     lastname: { name: "Apellido", propertyName: "lastname" },
@@ -65,10 +48,14 @@ export default function FormClient() {
     email: { name: "email", propertyName: "email" },
     date: { name: "date", propertyName: "date", inputProps: { type: "date" } }
   }
+
   return (<>
     <form onSubmit={handleSubmit}>
       {Object.keys(props).map((e) => <DropBox key={props[e].propertyName} {...props[e]} {...propsUserDropBox} />)}
-      <CobradorDropbox />
+      <DropboxCobrador {...propsUserDataUseState}/>
+      <Dropboxstatus {...propsUserDataUseState}/>
+      <DropboxVendedora {...propsUserDataUseState}/>
+
     </form>
   </>)
 }

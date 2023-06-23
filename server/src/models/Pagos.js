@@ -3,7 +3,7 @@ const database = require('../db/database')
 
 const nameOfTable = 'pagos'
 const { oneData } = require('../sql/modules')
-const { putOneById, getOne, getLimit, deleteByOneData } = oneData(nameOfTable)
+const { putOneById, getOne, getLimit, deleteByOneData } = oneData({nameOfTable, table})
 
 const Pagos = {
   count: async () => await database.count({ nameOfTable }),
@@ -39,7 +39,8 @@ const Pagos = {
     await putOneById({ id, value: date, nameValue: 'date' }),
   putNoRecibo: async ({ id = '', noRecibo = '' }) =>
     await putOneById({ id, value: noRecibo, nameValue: 'no_recibo' }),
-  deleteById: async ({ id }) => await deleteByOneData({ value: id, nameValue: 'id' })
+  deleteById: async ({ id }) => await deleteByOneData({ value: id, nameValue: 'id' }),
+  nameOfTable
 }
 
 module.exports = Pagos
