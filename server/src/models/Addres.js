@@ -2,11 +2,15 @@ const { addres: table } = require("../sql/tables");
 const database = require("../db/database.js") ;
 const nameOfTable = "addres";
 const { oneData } = require( "../sql/modules.js");
-const { getOne, putOneById, getLimit } = oneData(nameOfTable, table);
+const { getOne, putOneById, getLimit } = oneData({nameOfTable, table});
 
 const Addres = {
   count: async () => await database.count({ nameOfTable }),
   get: getLimit,
+  getAddresDates: async ({street='',noaddress=''})=> {
+    const sqliteCode = `SELECT * FROM ${nameOfTable} WHERE street LIKE '${street}%' and noaddress LIKE '${noaddress}%' Limit 10 Offset 0`
+    return await database.get({table:table,sqliteCode:sqliteCode});
+  },
   getById: async ({ id = "" }) => await getOne({ value: id, nameValue: "id" }),
   getByclienteId: async ({ clienteId = 0 }) =>
     await getOne({ value: clienteId, nameValue: "cliente_id" }),
@@ -79,7 +83,7 @@ const Addres = {
   deleteById: async ({ id }) => {
     const sqliteDelete = `DELETE FROM ${nameOfTable} WHERE id = ${id}`;
     return await database.delete({ table: table, sqliteDelete: sqliteDelete });
-  },
+  }
 };
 
 module.exports = Addres

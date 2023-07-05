@@ -19,6 +19,7 @@
 .select-box:hover {
   color: aqua;
 }
+
 .select-dropbox-input:focus + .select-container {
   display: flex;
 }
@@ -29,4 +30,14 @@
 .select-mark {
   color: bisque;
   background-color: black;
+}
+.label-form{
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.label-name {
+  width: 5.3rem;
+  text-overflow: ellipsis
 }

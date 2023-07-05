@@ -10,7 +10,7 @@ const CRUDForTablesWhitTwoRows = ({ nameOfTable, table }) => {
       const sqliteCode = `SELECT * FROM ${nameOfTable} ORDER BY ${nameOfTable}`
       return await database.get({ table, sqliteCode })
     },
-    getById: async ({ id = '' }) => await getOne({ value: id, nameValue: 'id', limit: 10, offset: 0 }),
+    getById: async ({ id = '' }) => await getSpecific({ value: id, nameValue: 'id' }),
     getByName: async ({ value = '' }) => await getOne({ value, nameValue: nameOfTable, limit: 10, offset: 0 }),
     getSpecificName: async ({ value = '' }) => await getSpecific({ value, nameValue: nameOfTable }),
     post: async ({ value = '' }) => await postOne({ value, nameValue: nameOfTable }),

@@ -31,30 +31,30 @@ const getSuspender = (promise) => {
 
 export function fetchData(URL) {
   return {
-    get: ({url='',params = {}}) => {
+    get: ({ url = '', params = {} }) => {
       const promise = axios
-        .get(url=URL+url, { params, data: params })
+        .get(url = URL + url, { params, data: params })
         .then((response) => response.data)
         .then((json) => json);
       return getSuspender(promise);
     },
-    post: ({url='',params = {}}) => {
+    post: ({ url = '', params = {} }) => {
       const promise = axios
-        .post(url=URL+url, { params, data: params })
+        .post(url = URL + url, { params, data: params })
         .then((response) => response.data)
         .then((json) => json);
       return getSuspender(promise);
     },
-    put: ({url='',params = {}}) => {
+    put: ({ url = '', params = {} }) => {
       const promise = axios
-        .put(url=URL+url, { params, data: params })
+        .put(url = URL + url, { params, data: params })
         .then((response) => response.data)
         .then((json) => json);
       return getSuspender(promise);
     },
-    delete: ({url='',params = {}}) => {
+    delete: ({ url = '', params = {} }) => {
       const promise = axios
-        .delete(url=URL+url, { params, data: params })
+        .delete(url = URL + url, { params, data: params })
         .then((response) => response.data)
         .then((json) => json);
       return getSuspender(promise);

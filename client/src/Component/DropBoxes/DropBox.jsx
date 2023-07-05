@@ -3,27 +3,30 @@ import './styles.css'
 import { handleSubmit, setNewValues } from "../Handle/handle";
 
 
-export default function DropBox({ name = "DropBox", values, setValues, propertyName = '', apiData, handleChange, inputProps = { type: 'text' } }) {
+export default function DropBox({ name = "DropBox", values, setValues, propertyName = '', data, handleChange, inputProps = { type: 'text' } }) {
   const [selectedSpan, setSelectedSpan] = useState(0);
 
   const { setChange, setSelectedData } = setNewValues({ values, setValues, propertyName })
 
 
   const keyforList = ({ code }) => {
-    const size = data.length
     if (!data[selectedSpan]) return
+    const keyId = Object.keys(values).find(e => propertyName + '_id' === e)
+    const newkeyId = keyId ? { [keyId]: data[selectedSpan]['id'] ? data[selectedSpan]['id'] :true, id: '' } : {}
+    const newData = { ...data[selectedSpan], ...newkeyId }
+    // if keyId exist, add all newDates
+    const size = keyId ? 1 : data.length
     if (size === 0) return
-    if (code==='ArrowUp') return setSelectedSpan(selectedSpan > 0 ? selectedSpan - 1 : size - 1)
-    if (code==='ArrowDown') return setSelectedSpan(selectedSpan < size - 1 ? selectedSpan + 1 : 0)
-    if (code==='Enter') return setSelectedData({ data, selectedSpan, setSelectedSpan, size })
-    if (code==='Tab')return setSelectedData({ data, selectedSpan, setSelectedSpan, size })
+    if (code === 'ArrowUp') return setSelectedSpan(selectedSpan > 0 ? selectedSpan - 1 : size - 1)
+    if (code === 'ArrowDown') return setSelectedSpan(selectedSpan < size - 1 ? selectedSpan + 1 : 0)
+    if (code === 'Enter') return setSelectedData({ data: newData, setSelectedSpan, size })
+    if (code === 'Tab') return setSelectedData({ data: newData, setSelectedSpan, size })
   }
-
-  const { data } = apiData.read();
+  
   const isOnKeyDown = inputProps.type === "date" ? {} : { onKeyDown: keyforList }
   return (<>
-    <label>
-      {name}:
+    <label className="label-form">
+      <span className="label-name">{name}:</span>
       <div className="select-dropbox">
         <input className="select-dropbox-input"
           name={propertyName}
@@ -31,6 +34,7 @@ export default function DropBox({ name = "DropBox", values, setValues, propertyN
           value={values[propertyName] || ''}
           onSubmit={handleSubmit}
           onChange={handleChange}
+          id={propertyName+'-id'}
           {...isOnKeyDown} />
         <div className="select-container" >
           <Suspense fallback={<span className="select-box" key={`suspenseid-${propertyName}`} >Loading...</span>}>

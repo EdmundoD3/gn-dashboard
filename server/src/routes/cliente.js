@@ -1,7 +1,9 @@
 const router = require('express').Router();
 const Cliente = require('../models/Cliente')
-
-const { checkType } = require("./modules")
+const Cobrador = require('../models/Cobrador')
+const Status = require('../models/Status')
+const Vendedora = require('../models/Vendedora')
+const { checkType } = require("./modules");
 const { isNumber, isString } = checkType
 
 router.get('/id', async (req, res) => {
@@ -40,9 +42,17 @@ router.get('/data', async (req, res) => {
   if (!isString(name) && !isString(lastName)) return res.status(403).json({ error: 'name or lastname is not string' })
   try {
     const response = await Cliente.getPersonalDates({ name, lastName, phone })
+    const respons = await Promise.all(await (response.map(async (e) => {
+      const cobrador = await Cobrador.getById({ id: e['cobrador_id'] }) || [{cobrador:''}]
+      const status = await Status.getById({ id: e['status_id'] }) || [{status:''}]
+      const vendedora = await Vendedora.getById({ id: e['vendedora_id'] }) || [{vendedora:''}]
+      const newData= {...cobrador[0],...vendedora[0],...status[0]}
+      return {...e,...newData}
+    })));
+
     return res.status(200).json({
       error: null,
-      data: response
+      data: respons
     })
   } catch (error) {
     console.log(error)

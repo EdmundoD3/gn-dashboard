@@ -7,7 +7,7 @@ import FormUpdate from "../Component/form/formUpdate";
 export default function Clients() {
 
   return (
-    <div className="Clients">
+    <div className="Clients pages">
       <FormUpdate />
       <AddNotas />
     </div>
